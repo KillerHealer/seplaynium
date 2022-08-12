@@ -1,3 +1,4 @@
+import logging
 import time
 import pytest
 import re
@@ -21,6 +22,7 @@ def test_buy_cheapest_dress():
     driver.get('http://automationpractice.com/index.php')
     login_btn = driver.find_element(By.CLASS_NAME, "login")
     login_btn.click()
+    logging.info("going from the home screen to the login screen!")
     login_form = driver.find_element(By.XPATH, '//*[@id="login_form"]')
     email_input = login_form.find_element(By.XPATH, '//*[@id="email"]')
     email_input.send_keys("noam@gmail.com")
@@ -28,10 +30,12 @@ def test_buy_cheapest_dress():
     pass_input.send_keys("Abcd1234@")
     sign_in_btn = login_form.find_element(By.XPATH, '//*[@id="SubmitLogin"]')
     sign_in_btn.click()
+    logging.info("signing in!")
     search_box = driver.find_element(By.ID, "search_query_top")
     search_btn = driver.find_element(By.NAME, "submit_search")
     search_box.send_keys("summer")
     search_btn.click()
+    logging.info("searching for the word 'summer' in the search bar and going to the search page!")
     time.sleep(4)
     product_list = driver.find_element(By.CLASS_NAME, "product_list")
     product_containers = product_list.find_elements(By.CLASS_NAME, "product-container")
@@ -45,6 +49,7 @@ def test_buy_cheapest_dress():
             cheapest_product = product_container.find_element(By.XPATH, '//*[@id="center_column"]/ul/li[3]')
     cheapest_product.click()
     add_to_cart = driver.find_element(By.ID, "add_to_cart")
+    logging.info("finding the cheapest product in the search page and starting to buy it!")
     add_to_cart.click()
     time.sleep(5)
     driver.find_element(By.XPATH, '//*[@id="layer_cart"]/div[1]/div[2]/div[4]/a').click()
@@ -68,6 +73,7 @@ def test_buy_cheapest_dress():
     actions = ActionChains(driver)
     actions.move_to_element(proceed).click().perform()
     assert driver.find_element(By.CLASS_NAME, "cheque-indent").text == "Your order on My Store is complete."
+    logging.info("bought the product successfully!")
     driver.quit()
 
 
