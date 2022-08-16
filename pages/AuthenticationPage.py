@@ -19,3 +19,6 @@ class AuthenticationPage(BasicPage):
         login_form.find_element(*self._locators["login_btn_locate"]).click()
         return self._driver
 
+    def forgot_password(self):
+        self._driver.find_element(By.XPATH, '//a[text()="Forgot your password?"]').click()
+
