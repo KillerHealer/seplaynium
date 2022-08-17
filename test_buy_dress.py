@@ -1,20 +1,26 @@
 import logging
 import re
 import time
-
+import pytest
 from playwright.sync_api import Page, expect
 
+from MainPage import MainPage
 
-def test_buy_cheapest_dress(page: Page):
+
+@pytest.fixture
+def page(page: Page):
+    page.goto("http://automationpractice.com/index.php")
+    expect(page).to_have_title(re.compile("My Store"))
+    get_started = MainPage(page)
+    get_started.SignIn()
+    return page
+
+
+def test_buy_cheapest_dress(page):
     """
     tries to find the cheapest dress from the search for summer and buys it
     :return:
     """
-    page.goto("http://automationpractice.com/index.php")
-    expect(page).to_have_title(re.compile("My Store"))
-    get_started = page.locator('xpath=//*[@id="header"]/div[2]/div/div/nav/div[1]/a')
-    expect(get_started).to_have_attribute("href", "http://automationpractice.com/index.php?controller=my-account")
-    get_started.click()
     logging.info("going from the home screen to the login screen!")
     expect(page).to_have_url(re.compile(".*my-account"))
     email_input = page.locator("id=email")
