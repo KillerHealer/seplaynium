@@ -1,13 +1,14 @@
-from pages.BasicPage import BasicPage
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+import logging
+import re
+import time
+from playwright.sync_api import Page, expect
+from BasicPage import BasicPage
 
 
 class ShoppingCompletePage(BasicPage):
-    def __init__(self, driver: webdriver):
-        super().__init__(driver)
-        self._locators = {"Home-btn": (By.LINK_TEXT, "home"),
-                          "blabla": (By.LINK_TEXT, "jnk")}
+    def __init__(self, page: Page):
+        super().__init__(page)
+        self._locators = {"body": "body"}
 
     def success(self):
-        return self._driver.find_element(By.CLASS_NAME, "cheque-indent").text == "Your order on My Store is complete."
+        return self._page.locator(self._locators["body"]).inner_html() == "Your order on My Store is complete."

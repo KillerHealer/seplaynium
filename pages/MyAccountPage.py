@@ -1,24 +1,26 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+import logging
+import re
+import time
+from playwright.sync_api import Page, expect
 from pages.BasicPage import BasicPage
 
 
 class MyAccountPage(BasicPage):
-    def __init__(self, driver: webdriver):
-        super().__init__(driver)
-        self._locators = {"Home-btn": (By.CLASS_NAME, "home"),
-                          "blabla": (By.LINK_TEXT, "jnk")}
+    def __init__(self, page: Page):
+        super().__init__(page)
+        self._locators = {"Home-btn": 'text="Return to Home"',
+                          "account_name": 'xpath=//*[@id="header"]/div[2]/div/div/nav/div[1]/a/span',
+                          "error1": '//*[@id="center_column"]/div[1]/ol/li/text()'}
 
     def home(self):
-        self._driver.find_element(*self._locators["Home-btn"]).click()
-        return self._driver
+        self._page.locator(*self._locators["Home-btn"]).click()
+        return self._page
 
     def get_account_name(self):
-        return self._driver.find_element(By.XPATH, '//*[@id="header"]/div[2]/div/div/nav/div[1]/a/span').text
+        return self._page.locator(self._locators["account_name"]).text_content()
 
     def quit(self):
-        self._driver.quit()
+        self._page.close()
 
     def find_error(self):
-        return self._driver.find_element(By.XPATH, '//*[@id="center_column"]/div[1]') \
-                 .find_element(By.XPATH, '//*[@id="center_column"]/div[1]/ol/li').text
+        return self._page.locator(self._locators["error1"]).inner_text()

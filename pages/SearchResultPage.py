@@ -1,28 +1,38 @@
+import logging
 import re
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from pages.BasicPage import BasicPage
+import time
+from playwright.sync_api import Page, expect
+from BasicPage import BasicPage
 
 
 class SearchResultPage(BasicPage):
-    def __init__(self, driver: webdriver):
-        super().__init__(driver)
-        self._locators = {"product_list": (By.CLASS_NAME, "product_list"),
-                          "product_containers": (By.CLASS_NAME, "product-container"),
-                          "right_block": (By.CLASS_NAME, "right-block"),
-                          "product_name": (By.TAG_NAME, "span"),
-                          "cheapest_product": (By.XPATH, '//*[@id="center_column"]/ul/li[3]')}
+    def __init__(self, page: Page):
+        super().__init__(page)
+        self._locators = {"product_list": 'ul.product_list li',
+                          "prices": "ul.product_list li .product-price",
+                          "add_to_cart": "text='Add to cart'"}
 
     def find_cheapest(self):
-        product_list = self._driver.find_element(*self._locators["product_list"])
-        product_containers = product_list.find_elements(*self._locators["product_containers"])
-        minimum = 200.9
-        cheapest_product = self._driver
-        for product_container in product_containers:
-            right_block = product_container.find_element(*self._locators["right_block"])
-            product_name = right_block.find_element(*self._locators["product_name"]).text
-            if float(re.findall("\d+\.\d+", str(product_name))[0]) < minimum:
-                minimum = float(re.findall("\d+\.\d+", str(product_name))[0])
-                cheapest_product = product_container.find_element(*self._locators["cheapest_product"])
-        cheapest_product.click()
-        return self._driver
+        products_list = self._page.locator(self._locators["product_list"])
+        prices = self._page.locator(self._locators["prices"])
+        prices_list = []
+        for price in prices.all_inner_texts():
+            prices_list.append(re.sub('[^\d\.]', "", price))
+        cheapest_product = products_list.locator(f".product-container:has-text('${(min(prices_list))}')")
+        cheapest_product.hover()
+        logging.info("finding the cheapest product in the search page and starting to buy it!")
+        self._page.wait_for_timeout(3000)
+        cheapest_product.locator(self._locators["add_to_cart"]).click()
+        return self._page
+        # product_list = self._page.locator(*self._locators["product_list"])
+        # product_containers = product_list.(*self._locators["product_containers"])
+        # minimum = 200.9
+        # cheapest_product = self._page
+        # for product_container in product_containers:
+        #     right_block = product_container.find_element(*self._locators["right_block"])
+        #     product_name = right_block.find_element(*self._locators["product_name"]).text
+        #     if float(re.findall("\d+\.\d+", str(product_name))[0]) < minimum:
+        #         minimum = float(re.findall("\d+\.\d+", str(product_name))[0])
+        #         cheapest_product = product_container.find_element(*self._locators["cheapest_product"])
+        # cheapest_product.click()
+        # return self._driver

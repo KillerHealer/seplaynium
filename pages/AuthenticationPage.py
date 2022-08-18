@@ -1,24 +1,25 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
+import logging
+import re
+import time
+from playwright.sync_api import Page, expect
 from pages.BasicPage import BasicPage
 
 
 class AuthenticationPage(BasicPage):
-    def __init__(self, driver: webdriver):
-        super().__init__(driver)
-        self._locators = {"email_locate": (By.ID, "email"),
-                          "login_form": (By.ID, "login_form"),
-                          "password_locate": (By.ID, "passwd"),
-                          "login_btn_locate": (By.ID, "SubmitLogin")}
+    def __init__(self, page: Page):
+        super().__init__(page)
+        self._locators = {"email_locate": "id=email",
+                          "password_locate": "id=passwd",
+                          "login_btn_locate": "id=SubmitLogin",
+                          "forgot_password": "text=Forgot your password?"}
 
     def login(self, username: str, password: str):
-        login_form = self._driver.find_element(*self._locators["login_form"])
-        login_form.find_element(*self._locators["email_locate"]).send_keys(username)
-        login_form.find_element(*self._locators["password_locate"]).send_keys(password)
-        login_form.find_element(*self._locators["login_btn_locate"]).click()
-        return self._driver
+        login_form = self._page.locator(*self._locators["login_form"])
+        login_form.locator(*self._locators["email_locate"]).type(username)
+        login_form.locator(*self._locators["password_locate"]).type(password)
+        login_form.locator(*self._locators["login_btn_locate"]).click()
+        return self._page
 
     def forgot_password(self):
-        self._driver.find_element(By.XPATH, '//a[text()="Forgot your password?"]').click()
+        self._page.locator(self._locators["forgot_password"]).click()
 
