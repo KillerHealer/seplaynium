@@ -1,48 +1,30 @@
 import time
-from selenium.webdriver import ActionChains
+from playwright.sync_api import Page
 from pages.BasicPage import BasicPage
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 
 
 class CheapestProductPage(BasicPage):
-    def __init__(self, driver: webdriver):
-        super().__init__(driver)
-        self._locators = {"add-to-cart": (By.ID, "add_to_cart"),
-                          "proceed1": (By.XPATH, '//*[@id="layer_cart"]/div[1]/div[2]/div[4]/a'),
-                          "proceed2": (By.ID, "center_column"),
-                          "proceed3": (By.CLASS_NAME, "cart_navigation"),
-                          "proceed4": (By.CLASS_NAME, "button"),
-                          "proceed5": (By.CLASS_NAME, "cart_navigation"),
-                          "proceed6": (By.TAG_NAME, "button"),
-                          "proceed7": (By.XPATH, '//*[@id="cgv"]'),
-                          "proceed8": (By.NAME, "processCarrier"),
-                          "proceed9": (By.CLASS_NAME, "bankwire"),
-                          "proceed10": (By.ID, "center_column"),
-                          "proceed11": (By.TAG_NAME, "button")}
+    def __init__(self, page: Page):
+        super().__init__(page)
+        self._locators = {"add-to-cart": "text=Add to cart",
+                          "proceed1": "text='Proceed to checkout'",
+                          "proceed2": "#center_column >> text='Proceed to checkout'",
+                          "proceed3": "button >> text='Proceed to checkout'",
+                          "proceed4": "input#cgv",
+                          "proceed5": "button >> text='Proceed to checkout'",
+                          "proceed6": "text='Pay by bank wire'",
+                          "proceed7": "button >> text='I confirm my order'",
+                          "proceed8": 'body'}
 
     def buy(self):
-        add_to_cart = self._driver.find_element(*self._locators["add-to-cart"])
-        add_to_cart.click()
-        time.sleep(8)
-        self._driver.find_element(*self._locators["proceed1"]).click()
-        proceed = self._driver.find_element(*self._locators["proceed2"]) \
-            .find_element(*self._locators["proceed3"]).find_element(*self._locators["proceed4"])
-        actions = ActionChains(self._driver)
-        actions.move_to_element(proceed).click().perform()
-        proceed = self._driver.find_element(*self._locators["proceed5"]).find_element(*self._locators["proceed6"])
-        actions = ActionChains(self._driver)
-        actions.move_to_element(proceed).click().perform()
-        checkbox = self._driver.find_element(*self._locators["proceed7"])
-        actions = ActionChains(self._driver)
-        actions.move_to_element(checkbox).click().perform()
-        proceed = self._driver.find_element(*self._locators["proceed8"])
-        actions = ActionChains(self._driver)
-        actions.move_to_element(proceed).click().perform()
-        proceed = self._driver.find_element(*self._locators["proceed9"])
-        actions = ActionChains(self._driver)
-        actions.move_to_element(proceed).click().perform()
-        proceed = self._driver.find_element(*self._locators["proceed10"]).find_element(*self._locators["proceed11"])
-        actions = ActionChains(self._driver)
-        actions.move_to_element(proceed).click().perform()
-        return self._driver
+        time.sleep(5)
+        self._page.locator(self._locators["proceed1"]).click()
+        time.sleep(2)
+        self._page.locator(self._locators["proceed2"]).click()
+        self._page.locator(self._locators["proceed3"]).click()
+        checkbox = self._page.locator(self._locators["proceed4"])
+        checkbox.click()
+        self._page.locator(self._locators["proceed5"]).click()
+        self._page.locator(self._locators["proceed6"]).click()
+        self._page.locator(self._locators["proceed7"]).click()
+        return self._page

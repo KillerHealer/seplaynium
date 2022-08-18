@@ -1,7 +1,6 @@
 import logging
 import re
-import time
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 from BasicPage import BasicPage
 
 
@@ -24,15 +23,4 @@ class SearchResultPage(BasicPage):
         self._page.wait_for_timeout(3000)
         cheapest_product.locator(self._locators["add_to_cart"]).click()
         return self._page
-        # product_list = self._page.locator(*self._locators["product_list"])
-        # product_containers = product_list.(*self._locators["product_containers"])
-        # minimum = 200.9
-        # cheapest_product = self._page
-        # for product_container in product_containers:
-        #     right_block = product_container.find_element(*self._locators["right_block"])
-        #     product_name = right_block.find_element(*self._locators["product_name"]).text
-        #     if float(re.findall("\d+\.\d+", str(product_name))[0]) < minimum:
-        #         minimum = float(re.findall("\d+\.\d+", str(product_name))[0])
-        #         cheapest_product = product_container.find_element(*self._locators["cheapest_product"])
-        # cheapest_product.click()
-        # return self._driver
+

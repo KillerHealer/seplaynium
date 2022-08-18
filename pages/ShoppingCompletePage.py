@@ -1,7 +1,4 @@
-import logging
-import re
-import time
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 from BasicPage import BasicPage
 
 
@@ -11,4 +8,4 @@ class ShoppingCompletePage(BasicPage):
         self._locators = {"body": "body"}
 
     def success(self):
-        return self._page.locator(self._locators["body"]).inner_html() == "Your order on My Store is complete."
+        return "Your order on My Store is complete" in self._page.locator(self._locators["body"]).inner_html()
