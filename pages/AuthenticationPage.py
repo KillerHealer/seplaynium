@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
 from pages.BasicPage import BasicPage
 
 
@@ -10,7 +9,8 @@ class AuthenticationPage(BasicPage):
         self._locators = {"email_locate": (By.ID, "email"),
                           "login_form": (By.ID, "login_form"),
                           "password_locate": (By.ID, "passwd"),
-                          "login_btn_locate": (By.ID, "SubmitLogin")}
+                          "login_btn_locate": (By.ID, "SubmitLogin"),
+                          "forgot-password": (By.XPATH, '//a[text()="Forgot your password?"]')}
 
     def login(self, username: str, password: str):
         login_form = self._driver.find_element(*self._locators["login_form"])
@@ -20,5 +20,5 @@ class AuthenticationPage(BasicPage):
         return self._driver
 
     def forgot_password(self):
-        self._driver.find_element(By.XPATH, '//a[text()="Forgot your password?"]').click()
+        self._driver.find_element(*self._locators["forgot-password"]).click()
 

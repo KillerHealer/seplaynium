@@ -3,7 +3,6 @@ import time
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 from pages.AuthenticationPage import AuthenticationPage
 from pages.MainPage import MainPage
 from pages.MyAccountPage import MyAccountPage
@@ -38,14 +37,6 @@ def test_login_form_logged_in(main_page):
     assert my_account_page.get_account_name() == "noam noam"
     time.sleep(3)
     my_account_page.quit()
-    # driver = get_to_login_page()
-    # login_form = driver.find_element(By.XPATH, '//*[@id="login_form"]')
-    # email_input = login_form.find_element(By.XPATH, '//*[@id="email"]')
-    # email_input.send_keys("noam@gmail.com")
-    # pass_input = login_form.find_element(By.XPATH, '//*[@id="passwd"]')
-    # pass_input.send_keys("Abcd1234@")
-    # sign_in_btn = login_form.find_element(By.XPATH, '//*[@id="SubmitLogin"]')
-    # sign_in_btn.click()
 
 
 def test_login_form_logged_in_failed(main_page):
@@ -60,20 +51,6 @@ def test_login_form_logged_in_failed(main_page):
     assert my_account_page.find_error() == "Authentication failed."
     time.sleep(3)
     my_account_page.quit()
-    # driver = get_to_login_page()
-    # login_form = driver.find_element(By.XPATH, '//*[@id="login_form"]')
-    # email_input = login_form.find_element(By.XPATH, '//*[@id="email"]')
-    # email_input.send_keys("noam@gmail.com")
-    # pass_input = login_form.find_element(By.XPATH, '//*[@id="passwd"]')
-    # pass_input.send_keys("Abcd14@")
-    # sign_in_btn = login_form.find_element(By.XPATH, '//*[@id="SubmitLogin"]')
-    # sign_in_btn.click()
-    # logging.info("trying to login with incorrect credentials!")
-    # time.sleep(3)
-    # assert driver.find_element(By.XPATH, '//*[@id="center_column"]/div[1]') \
-    #     .find_element(By.XPATH, '//*[@id="center_column"]/div[1]/ol/li').text == "Authentication failed."
-    # time.sleep(3)
-    # driver.quit()
 
 
 def test_login_form_without_password_failed():
@@ -88,18 +65,6 @@ def test_login_form_without_password_failed():
     assert my_account_page.find_error() == "Password is required."
     time.sleep(3)
     my_account_page.quit()
-    # driver = get_to_login_page()
-    # login_form = driver.find_element(By.XPATH, '//*[@id="login_form"]')
-    # email_input = login_form.find_element(By.XPATH, '//*[@id="email"]')
-    # email_input.send_keys("noam@gmail.com")
-    # sign_in_btn = login_form.find_element(By.XPATH, '//*[@id="SubmitLogin"]')
-    # sign_in_btn.click()
-    # logging.info("trying to login without the password!")
-    # time.sleep(3)
-    # assert driver.find_element(By.XPATH, '//*[@id="center_column"]/div[1]') \
-    #     .find_element(By.XPATH, '//*[@id="center_column"]/div[1]/ol/li').text == "Password is required."
-    # time.sleep(3)
-    # driver.quit()
 
 
 def test_login_form_without_email_failed(main_page):
@@ -114,23 +79,11 @@ def test_login_form_without_email_failed(main_page):
     assert my_account_page.find_error() == "An email address required."
     time.sleep(3)
     my_account_page.quit()
-    # driver = get_to_login_page()
-    # login_form = driver.find_element(By.XPATH, '//*[@id="login_form"]')
-    # pass_input = login_form.find_element(By.XPATH, '//*[@id="passwd"]')
-    # pass_input.send_keys("Abcd1234@")
-    # sign_in_btn = login_form.find_element(By.XPATH, '//*[@id="SubmitLogin"]')
-    # sign_in_btn.click()
-    # logging.info("trying to login without the email!")
-    # time.sleep(3)
-    # assert driver.find_element(By.XPATH, '//*[@id="center_column"]/div[1]') \
-    #     .find_element(By.XPATH, '//*[@id="center_column"]/div[1]/ol/li').text == "An email address required."
-    # time.sleep(3)
-    # driver.quit()
 
 
 def test_forgot_password_btn(main_page):
     """
-
+    tries to goes to forgot password page
     :return:
     """
     authentication_page = AuthenticationPage(main_page.SignIn())
@@ -140,9 +93,3 @@ def test_forgot_password_btn(main_page):
     assert my_account_page.current_url() == "http://automationpractice.com/index.php?controller=password"
     time.sleep(3)
     my_account_page.quit()
-    # driver = get_to_login_page()
-    # driver.find_element(By.XPATH, '//a[text()="Forgot your password?"]').click()
-    # time.sleep(3)
-    # assert driver.current_url == "http://automationpractice.com/index.php?controller=password"
-    # time.sleep(3)
-    # driver.quit()

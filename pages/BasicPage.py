@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 
 
 class BasicPage:
@@ -8,6 +7,3 @@ class BasicPage:
 
     def current_url(self):
         return self._driver.current_url
-
-    # def find_element_and_color_it(self, by: By, this: str):
-    #     pass
